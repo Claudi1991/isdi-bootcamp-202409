@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Sixtyfour&display=swap');
+
+:root {
+    --color: rgb(255, 233, 30);
+    --font: 'Sixtyfour';
+    font-family: var(--font);
+}
+
+body {
+    background-color: black;
+    color: var(--color);
+}
+
+a:visited {
+    color: var(--color);
+}
+
+input {
+    background-color: aquamarine;
+    font-family: inherit;
+}
+
+h1 {
+    text-align: center;
+}
+
+section {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}

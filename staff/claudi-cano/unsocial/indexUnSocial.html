@@ -171,10 +171,13 @@
             event.preventDefault()
 
             var inputs = info.querySelectorAll("input");
+
             var usernameInput = inputs[0];
             var username = usernameInput.value;
+
             var passwordInput = inputs[1];
             var password = passwordInput.value;
+
             var user = users.find(
                 (user) => user.username === username && user.password === password
             );
@@ -187,14 +190,17 @@
                 h3.innerText = "Hello, " + user.username;
             } else {
                 alert("This is not you mdfk!!!");
+                passwordInput.value = "";
+
             }
         })
         var logout = sections[2]
 
         logout.addEventListener("click", function (event) {
-            homeSection.style.display = "none"
-            registerSection.style.display = "none"
-            loginSection.style.display = ""
+            homeSection.style.display = "none";
+            registerSection.style.display = "none";
+            loginSection.style.display = "";
+            loggedInUser = null
         })
 
     </script>
