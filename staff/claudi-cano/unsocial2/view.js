@@ -56,7 +56,7 @@ function buildLoginSection() {
 
             var homeSection = buildHomeSection()
 
-            body.appendChild(homeSection)
+            body.add(homeSection)
         } catch (error) {
             passwordField[1].value = ""
 
