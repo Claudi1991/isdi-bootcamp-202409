@@ -11,7 +11,7 @@ function PostItem(username, image, text, date) {
     this.add(comment)
 
     var time = new Time(date)
-    this.add(date)
+    this.add(time)
 }
 
 PostItem.extends(Compo)

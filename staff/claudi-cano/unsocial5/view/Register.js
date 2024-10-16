@@ -27,7 +27,7 @@ function Register() {
     form.add(passwordInput)
 
     form.add(new Label("Repeat Password", "password-repeat"))
-    var passwordRepeatInput = new passwordInput("password-repeat")
+    var passwordRepeatInput = new PasswordInput("password-repeat")
     form.add(passwordInput)
 
     var submitButton = new Button("Register", "submit")

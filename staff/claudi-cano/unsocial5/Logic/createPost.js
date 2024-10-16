@@ -9,5 +9,9 @@ function createPost(username, image, text) {
         date: new Date
     }
 
-    postMessage.push(post)
+    posts.push(post)
+}
+
+function getPosts() {
+    return posts
 }

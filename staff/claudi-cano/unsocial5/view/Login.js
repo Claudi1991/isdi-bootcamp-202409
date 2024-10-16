@@ -16,7 +16,7 @@ function Login() {
 
     form.add(new Label("Password", "password"))
     var paswordInput = new PasswordInput("password")
-    form.add(usernameInput)
+    form.add(paswordInput)
 
     var submitButton = new Button("Login", "submit")
     form.add(submitButton)
@@ -25,7 +25,7 @@ function Login() {
         event.preventDefault()
 
         var username = usernameInput.getValue()
-        var password = passwordInput.getValue()
+        var password = paswordInput.getValue()
 
         try {
             loggedInUser = authenticateUser(username, password)

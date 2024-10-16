@@ -14,7 +14,7 @@ function Home() {
     this.add(logoutButton)
 
     logoutButton.addBehavior("click", function (event) {
-        event.preventDefaukt()
+        event.preventDefault()
 
         loggedInUser = null
 
@@ -30,7 +30,7 @@ function Home() {
         var createPost = new CreatePost()
 
         //postList.removeSelf()
-        this.children[this.children.lenght - 1].removeSelf()
+        this.children[this.children.length - 1].removeSelf()
 
         this.add(createPost)
     }.bind(this))
@@ -39,4 +39,4 @@ function Home() {
     this.add(postList)
 }
 
-Home.extens(Compo)
+Home.extends(Compo)

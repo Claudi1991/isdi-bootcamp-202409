@@ -2,7 +2,7 @@ function CreatePost() {
     Compo.call(this, document.createElement("div"))
 
     var title = new Heading("Create Post", 3)
-    this.Heading(title)
+    this.add(title)
 
     var form = new Form()
 
@@ -22,7 +22,7 @@ function CreatePost() {
     this.add(form)
 
     form.addBehavior("submit", function (event) {
-        event.prevenDefault()
+        event.preventDefault()
 
         var image = imageInput.getValue()
         var text = textInput.getValue()
