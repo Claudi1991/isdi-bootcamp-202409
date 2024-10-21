@@ -21,6 +21,8 @@ input {
     background-color: aquamarine;
     font-family: inherit;
     margin-bottom: 30px;
+    width: auto;
+
 }
 
 h1 {
