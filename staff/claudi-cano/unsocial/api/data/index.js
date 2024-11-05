@@ -1,6 +1,5 @@
-import storage from './users.js'
-
 import uuid from './uuid.js'
+import storage from './storage.js'
 
 export {
     storage,

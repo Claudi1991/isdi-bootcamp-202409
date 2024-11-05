@@ -1,9 +1,8 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "description": "",
-  "type": "module",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node .",
     "inspect": "node --inspect-brk .",
@@ -12,6 +11,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "description": "",
   "dependencies": {
     "express": "^4.21.1"
   }

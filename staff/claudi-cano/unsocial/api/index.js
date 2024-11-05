@@ -1,11 +1,11 @@
-import express from 'express'
+import express, { json } from 'express'
 import logic from './logic/index.js'
 
 const server = express()
 
 const jsonBodyParser = express.json()
 
-server.use(express.static('public'))
+server.get('/', (_, res) => res.send('Hello API!'))
 
 server.post('/authenticate', jsonBodyParser, (req, res) => {
     const { username, password } = req.body
@@ -22,7 +22,7 @@ server.post('/authenticate', jsonBodyParser, (req, res) => {
 })
 
 server.post('/register', jsonBodyParser, (req, res) => {
-    const { name, email, username, password, passwordRepeat } = req.body
+    const { name, email, username, password, 'password-repeat': passwordRepeat } = req.body
 
     try {
         logic.registerUser(name, email, username, password, passwordRepeat)
@@ -65,6 +65,19 @@ server.post('/posts', jsonBodyParser, (req, res) => {
     }
 })
 
+server.delete('/posts/:postId', (req, res) => {
+    const { posrId } = req.params
+    const userId = req.headers.authorization.slice(6)
+
+    try {
+        logic.deletePost(userId, posrId)
+        res.status(200).send()
+    } catch (error) {
+        res.status(400).json({ error: error.constructor.name, message: error.message })
+
+        console.error(error)
+    }
+})
 
 server.listen(8080, () => console.log('api is up'))
 

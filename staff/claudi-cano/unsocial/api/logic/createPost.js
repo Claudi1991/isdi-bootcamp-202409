@@ -1,6 +1,5 @@
+import { uuid, storage } from '../data/index.js'
 import { validate } from './helpers/index.js'
-
-import { storage, uuid } from '../data/index.js'
 
 export default (userId, image, text) => {
     validate.id(userId, 'userId')
@@ -22,7 +21,6 @@ export default (userId, image, text) => {
         likes: [],
         comments: []
     }
-
     posts.push(post)
 
     storage.posts = posts
