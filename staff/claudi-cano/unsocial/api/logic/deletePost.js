@@ -1,11 +1,15 @@
 import { storage } from '../data/index.js'
-import { validate } from './helpers/index.js'
+import { validate } from 'com'
 
 export default (userId, postId) => {
     validate.id(userId, 'userId')
     validate.id(postId, 'postId')
 
-    const { posts } = storage
+    const { users, posts } = storage
+
+    const found = users.some(({ id }) => id === userId)
+
+    if (!found) throw new Error('user not found')
 
     const index = posts.findIndex(({ id }) => id === postId)
 

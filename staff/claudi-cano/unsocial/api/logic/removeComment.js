@@ -1,9 +1,10 @@
 import { validate } from 'com'
 import { storage } from '../data/index.js'
 
-export default (userId, postId) => {
+export default (userId, postId, commentId) => {
     validate.id(userId, 'userId')
     validate.id(postId, 'postId')
+    validate.id(commentId, 'commentId')
 
     const { users, posts } = storage
 
@@ -15,14 +16,19 @@ export default (userId, postId) => {
 
     if (!post) throw new Error('post not found')
 
-    const { likes } = post
+    const { comments } = post
 
-    const index = likes.indexOf(userId)
+    const index = comments.findIndex(({ id }) => id === commentId)
 
     if (index < 0)
-        likes.push(userId)
-    else
-        likes.splice(index, 1)
+        throw new Error('comment not found')
+
+    const { author } = comments[index]
+
+    if (author !== userId)
+        throw new Error('user is not author of comment')
+
+    comments.splice(index, 1)
 
     storage.posts = posts
 }

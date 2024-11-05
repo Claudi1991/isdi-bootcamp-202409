@@ -4,6 +4,6 @@ xhr.addEventListener('load', () => {
     console.log(xhr.status, xhr.response)
 })
 
-xhr.open('GET', 'http://localhost:8080/users/m2vvqdtgcba/name')
-xhr.setRequestHeader('Authorization', 'Basic m2vvqdtgcba')
+xhr.open('PATCH', 'http://localhost:8080/posts/m2vw4ucygv/likes')
+xhr.setRequestHeader('Authorization', 'Basic m2vvw4xzn6d')
 xhr.send()

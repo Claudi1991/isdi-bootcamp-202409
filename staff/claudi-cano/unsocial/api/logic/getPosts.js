@@ -1,8 +1,14 @@
-import { storage } from "../data"
+import { storage } from '../data/index.js'
+import { validate } from 'com'
 
-export default () => {
+export default userId => {
+    validate.id(userId, 'userId')
 
     const { users, posts } = storage
+
+    const found = users.some(({ id }) => id === userId)
+
+    if (!found) throw new Error('user not found')
 
     posts.forEach(post => {
         const { author: authorId } = post
@@ -11,9 +17,9 @@ export default () => {
 
         post.author = { id: authorId, username }
 
-        post.liked = post.likedBy.includes(userId)
+        post.liked = post.likes.includes(userId)
 
-        delete post.comments
+        post.comments = post.comments.length
     })
 
     return posts.toReversed()

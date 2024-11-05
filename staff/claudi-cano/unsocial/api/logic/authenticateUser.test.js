@@ -1,4 +1,4 @@
-import authenticateUser from "./authenticateUser";
+import authenticateUser from './authenticateUser'
 
 try {
     console.log(authenticateUser('cocodrilo', '123123123'))

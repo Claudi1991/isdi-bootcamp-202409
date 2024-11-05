@@ -1,45 +1,35 @@
+import { Button } from '../library'
+import Comments from './Comments'
+
+import logic from '../../logic'
+
+import getElapsedTime from '../../utils/getElapsedTime'
+
+import './Post.css'
 import { Component } from 'react'
-
-import Post from './Post'
-
-import getPosts from '../../logic/getPosts'
 
 export default class extends Component {
     constructor(props) {
-        console.log('Post -> render')
+        console.log('Post -> constructor')
 
         super(props)
 
-        let posts
-
-        try {
-            posts = getPosts()
-        } catch (error) {
-            alert(error.message)
-
-            console.error(error)
-        }
-
-        this.state = { posts }
+        this.state = { view: null }
     }
 
-    handleLiked = () => {
+    handleLikeClick = () => {
         try {
-            const posts = getPosts()
+            logic.toggleLikePost(this.props.post.id, error => {
+                if (error) {
+                    alert(error.message)
 
-            this.setState({ posts })
-        } catch (error) {
-            alert(error.message)
+                    console.error(error)
 
-            console.error(error)
-        }
-    }
+                    return
+                }
 
-    handleDeleted = () => {
-        try {
-            const posts = getPosts()
-
-            this.setState({ posts })
+                this.props.onLiked()
+            })
         } catch (error) {
             alert(error.message)
 
@@ -47,45 +37,72 @@ export default class extends Component {
         }
     }
 
-    handleCommentAdded = () => {
-        try {
-            const posts = getPosts()
+    handleDeleteClick = () => {
+        if (confirm('Delete post?')) {
+            try {
+                logic.deletePost(this.props.post.id, error => {
+                    if (error) {
+                        alert(error.message)
 
-            this.setState({ posts })
-        } catch (error) {
-            alert(error.message)
+                        console.error(error)
 
-            console.error(error)
+                        return
+                    }
+
+                    this.props.onDeleted()
+                })
+            } catch (error) {
+                alert(error.message)
+
+                console.error(error)
+            }
         }
     }
 
-    handleCommentRemoved = () => {
-        try {
-            const posts = getPosts()
-
-            this.setState({ posts })
-        } catch (error) {
-            alert(error.message)
-
-            console.error(error)
-        }
+    handleCommentsClick = () => {
+        this.setState({ view: this.state.view ? null : 'comments' })
     }
 
     render() {
-        console.log('Posts -> render')
+        console.log('Post -> render')
 
-        return <div>
-            {this.state.posts.map(post => <Post
-                post={post}
+        const {
+            props: {
+                post: {
+                    id,
+                    author,
+                    image,
+                    text,
+                    date,
+                    liked,
+                    likes,
+                    comments
+                },
+                onCommentAdded,
+                onCommentRemoved
+            }
+        } = this
 
-                onLiked={this.handleLiked}
+        return <article className="Post" >
+            <h4>{author.username}</h4>
 
-                onDeleted={this.handleDeleted}
+            <img src={image} />
 
-                onCommentAdded={this.handleCommentAdded}
+            <p>{text}</p>
 
-                onCommentRemoved={this.handleCommentRemoved}
-            />)}
-        </div>
+            <time>{getElapsedTime(date)} ago</time>
+
+            <Button onClick={this.handleLikeClick}>{`${liked ? '❤️' : '🤍'} ${likes.length} likes`}</Button>
+
+            {author.id === logic.getUserId() && <Button onClick={this.handleDeleteClick}>🗑️</Button>}
+
+            <Button onClick={this.handleCommentsClick}>💬 {comments} comments</Button>
+
+            {this.state.view === 'comments' && <Comments
+                postId={id}
+                onAdded={onCommentAdded}
+                onRemoved={onCommentRemoved}
+            />}
+        </article >
     }
 }
