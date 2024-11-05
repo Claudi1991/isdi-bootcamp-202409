@@ -1,12 +1,9 @@
 import { storage } from '../data/index.js'
-import validate from './helpers/validate.js'
+import { validate } from 'com'
 
 export default (username, password) => {
     validate.username(username)
     validate.password(password)
-
-    if (password.length < 8)
-        throw new Error('invalid password')
 
     const { users } = storage
 
