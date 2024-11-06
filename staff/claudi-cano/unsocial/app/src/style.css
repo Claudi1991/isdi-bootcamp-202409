@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Sixtyfour&display=swap');
 
 :root {
-    --color: DarkSlateGray;
-    --back-color: white;
+    --color: rgb(142, 180, 19);
+    --back-color: rgb(132, 121, 121);
     --font: 'Sixtyfour';
     font-family: var(--font);
     height: 100%;

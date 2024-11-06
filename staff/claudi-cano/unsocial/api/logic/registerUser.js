@@ -13,8 +13,7 @@ export default (name, email, username, password, passwordRepeat) => {
 
     let user = users.find(user => user.username === username || user.email === email)
 
-    if (user)
-        throw new Error('user already exists')
+    if (user) throw new Error('user already exists')
 
     user = { id: uuid(), name: name, email: email, username: username, password: password }
 

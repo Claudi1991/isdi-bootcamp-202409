@@ -12,19 +12,19 @@ export default function App() {
 
     const handlePostCreated = () => setView('posts')
 
-    const handleUserLoggedOut = () => this.setView('login')
+    const handleUserLoggedOut = () => setView('login')
 
-    const handleUserLoggedIn = () => this.setView('posts')
+    const handleUserLoggedIn = () => setView('posts')
 
-    const handleRegisterClick = () => this.setView('register')
+    const handleRegisterClick = () => setView('register')
 
-    const handleLoginClick = () => this.setView('login')
+    const handleLoginClick = () => setView('login')
 
-    const handleUserRegistered = () => this.setView('login')
+    const handleUserRegistered = () => setView('login')
 
-    const handleNewPostClick = () => this.setView('new-post')
+    const handleNewPostClick = () => setView('new-post')
 
-    const handleHomeClick = () => this.setView('posts')
+    const handleHomeClick = () => setView('posts')
 
 
     console.log('App -> render')
