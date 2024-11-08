@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Sixtyfour&display=swap');
+
+:root {
+    --color: rgb(229, 130, 16);
+    --font: 'Sixtyfour';
+    font-family: var(--font);
+}
+
+body {
+    background-image: url(https://images.pexels.com/photos/1270184/pexels-photo-1270184.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+    background-position: center top;
+    background-size: cover;
+    color: var(--color);
+}
+
+a:visited {
+    color: var(--color);
+}
+
+input {
+    background-color: aquamarine;
+    font-family: inherit;
+    margin-bottom: 30px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+section {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
