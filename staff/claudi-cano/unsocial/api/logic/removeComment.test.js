@@ -1,7 +1,15 @@
+import db from 'dat'
 import removeComment from './removeComment.js'
 
-try {
-    removeComment('m2vvw4xzn6d', 'm2vw4ucygv', 'm32welb3e29')
-} catch (error) {
-    console.error(error)
-}
+db.connect('mongodb://localhost/unsocial-test')
+    .then(() => {
+        try {
+            return removeComment('') // nuevos id del mongo
+                .then(console.log) //undefined
+                .catch(console.error)
+        } catch (error) {
+            console.error
+        }
+    })
+    .catch(console.error)
+    .finally(() => db.disconnect())

@@ -1,7 +1,15 @@
+import db from 'dat'
 import createPost from './createPost.js'
 
-try {
-    createPost('m2vvw4xzn6d', 'https://images.squarespace-cdn.com/content/v1/6137f1eafdd46630c1744367/118c6bda-87ce-422c-95eb-1c8085e160f4/DSC00486-2.jpg', 'hola patagonia')
-} catch (error) {
-    console.error(error)
-}
+db.connect('mongodb://127.0.0.1:27017/unsocial-test')
+    .then(() => {
+        try {
+            return createPost('67339fbf156dde083adf67dd', 'https://www.litespeedtech.com/support/wiki/lib/exe/fetch.php/litespeed_wiki:config:403.png?w=400&tok=7a06aa', '403') // id, imagen, postcomment
+                .then(console.log) // undefined
+                .catch(console.error)
+        } catch (error) {
+            console.error(error)
+        }
+    })
+    .catch(console.error)
+    .finally(() => db.disconnect())

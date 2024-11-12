@@ -2,6 +2,9 @@ import db from 'dat'
 import express, { json } from 'express'
 import logic from './logic/index.js'
 import cors from 'cors'
+import { errors } from 'com'
+
+const { ValidationError, SystemError, DuplicityError, CredentialsError, NotFoundError, OwnershipError } = errors
 
 db.connect('mongodb://127.0.0.1:27017/unsocial-test')
     .then(() => {
@@ -15,37 +18,49 @@ db.connect('mongodb://127.0.0.1:27017/unsocial-test')
 
         server.get('/', (_, res) => res.send('Hello, API!'))
 
-        server.post('/authenticate', jsonBodyParser, (req, res) => {
+        server.post('/users/auth', jsonBodyParser, (req, res) => {
             try {
                 const { username, password } = req.body
 
                 logic.authenticateUser(username, password)
                     .then(userId => res.json(userId))
                     .catch(error => {
-                        res.status(401).json({ error: error.constructor.name, message: error.message })
+                        if (error instanceof CredentialsError)
+                            res.status(401).json({ error: error.constructor.name, message: error.message })
+                        else
+                            res.status(500).json({ error: SystemError.name, message: error.message })
 
                         console.error(error)
                     })
             } catch (error) {
-                res.status(401).json({ error: error.constructor.name, message: error.message })
+                if (error instanceof ValidationError)
+                    res.status(406).json({ error: error.constructor.name, message: error.message })
+                else
+                    res.status(500).json({ error: SystemError.name, message: error.message })
 
                 console.error(error)
             }
         })
 
-        server.post('/register', jsonBodyParser, (req, res) => {
+        server.post('/users', jsonBodyParser, (req, res) => {
             try {
                 const { name, email, username, password, 'password-repeat': passwordRepeat } = req.body
 
                 logic.registerUser(name, email, username, password, passwordRepeat)
                     .then(() => res.status(201).send())
                     .catch(error => {
-                        res.status(400).json({ error: error.constructor.name, message: error.message })
+                        if (error instanceof DuplicityError)
+                            res.status(409).json({ error: error.constructor.name, message: error.message })
+                        else
+                            res.status(500).json({ error: SystemError.name, message: error.message })
 
                         console.error(error)
                     })
             } catch (error) {
-                res.status(400).json({ error: error.constructor.name, message: error.message })
+                if (error instanceof ValidationError)
+                    res.status(406).json({ error: error.constructor.name, message: error.message })
+                else
+                    res.status(500).json({ error: SystemError.name, message: error.message })
 
                 console.error(error)
             }
@@ -72,14 +87,18 @@ db.connect('mongodb://127.0.0.1:27017/unsocial-test')
         })
 
         server.post('/posts', jsonBodyParser, (req, res) => {
-            const userId = req.headers.authorization.slice(6)
-
-            const { image, text } = req.body
-
             try {
-                logic.createPost(userId, image, text)
+                const userId = req.headers.authorization.slice(6)
 
-                res.status(201).send()
+                const { image, text } = req.body
+
+                logic.createPost(userId, image, text)
+                    .then(() => res.status(201).send())
+                    .catch(error => {
+                        res.status(400).json({ error: error.constructor.name, message: error.message })
+
+                        console.error(error)
+                    })
             } catch (error) {
                 res.status(400).json({ error: error.constructor.name, message: error.message })
 
@@ -88,12 +107,16 @@ db.connect('mongodb://127.0.0.1:27017/unsocial-test')
         })
 
         server.get('/posts', (req, res) => {
-            const userId = req.headers.authorization.slice(6)
-
             try {
-                const posts = logic.getPosts(userId)
+                const userId = req.headers.authorization.slice(6)
 
-                res.json(posts)
+                logic.getPosts(userId)
+                    .then(posts => res.json(posts))
+                    .catch(error => {
+                        res.status(400).json({ error: error.constructor.name, message: error.message })
+
+                        console.error(error)
+                    })
             } catch (error) {
                 res.status(400).json({ error: error.constructor.name, message: error.message })
 
@@ -102,14 +125,18 @@ db.connect('mongodb://127.0.0.1:27017/unsocial-test')
         })
 
         server.delete('/posts/:postId', (req, res) => {
-            const userId = req.headers.authorization.slice(6)
-
-            const { postId } = req.params
-
             try {
-                logic.deletePost(userId, postId)
+                const userId = req.headers.authorization.slice(6)
 
-                res.status(204).send()
+                const { postId } = req.params
+
+                logic.deletePost(userId, postId)
+                    .then(() => res.status(204).send())
+                    .catch(errors => {
+                        res.status(400).json({ error: error.constructor.name, message: error.message })
+
+                        console.error(error)
+                    })
             } catch (error) {
                 res.status(400).json({ error: error.constructor.name, message: error.message })
 
@@ -118,14 +145,18 @@ db.connect('mongodb://127.0.0.1:27017/unsocial-test')
         })
 
         server.patch('/posts/:postId/likes', (req, res) => {
-            const userId = req.headers.authorization.slice(6)
-
-            const { postId } = req.params
-
             try {
-                logic.toggleLikePost(userId, postId)
+                const userId = req.headers.authorization.slice(6)
 
-                res.status(204).send()
+                const { postId } = req.params
+
+                logic.toggleLikePost(userId, postId)
+                    .then(() => res.status(204).send())
+                    .catch(error => {
+                        res.status(400).json({ error: error.constructor.name, message: error.message })
+
+                        console.error(error)
+                    })
             } catch (error) {
                 res.status(400).json({ error: error.constructor.name, message: error.message })
 
@@ -134,20 +165,26 @@ db.connect('mongodb://127.0.0.1:27017/unsocial-test')
         })
 
         server.post('/posts/:postId/comments', jsonBodyParser, (req, res) => {
-            const userId = req.headers.authorization.slice(6)
-
-            // const { postId } = req.params
-
-            // const { text } = req.body
-
-            const { params: { postId }, body: { text } } = req
-
             try {
-                logic.addComment(userId, postId, text)
+                const userId = req.headers.authorization.slice(6)
 
-                res.status(201).send()
+                const { params: { postId }, body: { text } } = req
+
+                logic.addComment(userId, postId, text)
+                    .then(() => res.status(201).send())
+                    .catch(error => {
+                        if (error instanceof NotFoundError)
+                            res.status(404).json({ error: error.constructor.name, message: error.message })
+                        else
+                            res.status(500).json({ error: SystemError.name, message: error.message })
+
+                        console.error(error)
+                    })
             } catch (error) {
-                res.status(400).json({ error: error.constructor.name, message: error.message })
+                if (error instanceof ValidationError)
+                    res.status(406).json({ error: error.constructor.name, message: error.message })
+                else
+                    res.status(500).json({ error: SystemError.name, message: error.message })
 
                 console.error(error)
             }
@@ -160,26 +197,48 @@ db.connect('mongodb://127.0.0.1:27017/unsocial-test')
 
             try {
                 logic.removeComment(userId, postId, commentId)
+                    .then(() => res.status(204).send())
+                    .catch(error => {
+                        if (error instanceof NotFoundError)
+                            res.status(404).json({ error: error.constructor.name, message: error.message })
+                        else if (error instanceof OwnershipError)
+                            res.status(403).json({ error: error.constructor.name, message: error.message })
+                        else
+                            res.status(500).json({ error: SystemError.name, message: error.message })
 
-                res.status(204).send()
+                        console.error(error)
+                    })
             } catch (error) {
-                res.status(400).json({ error: error.constructor.name, message: error.message })
+                if (error instanceof ValidationError)
+                    res.status(406).json({ error: error.constructor.name, message: error.message })
+                else
+                    res.status(500).json({ error: SystemError.name, message: error.message })
 
                 console.error(error)
             }
         })
 
         server.get('/posts/:postId/comments', (req, res) => {
-            const userId = req.headers.authorization.slice(6)
-
-            const { postId } = req.params
-
             try {
-                const comments = logic.getComments(userId, postId)
+                const userId = req.headers.authorization.slice(6)
 
-                res.json(comments)
+                const { postId } = req.params
+
+                logic.getComments(userId, postId)
+                    .then(comments => res.json(comments))
+                    .catch(errors => {
+                        if (error instanceof NotFoundError)
+                            res.status(404).json({ error: error.constructor.name, message: error.message })
+                        else
+                            res.status(500).json({ error: SystemError.name, message: error.message })
+
+                        console.error(error)
+                    })
             } catch (error) {
-                res.status(400).json({ error: error.constructor.name, message: error.message })
+                if (error instanceof ValidationError)
+                    res.status(406).json({ error: error.constructor.name, message: error.message })
+                else
+                    res.status(500).json({ error: SystemError.name, message: error.message })
 
                 console.error(error)
             }
