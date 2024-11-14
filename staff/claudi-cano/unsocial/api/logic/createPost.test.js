@@ -1,7 +1,8 @@
+import 'dotenv/config'
 import db from 'dat'
 import createPost from './createPost.js'
 
-db.connect('mongodb://127.0.0.1:27017/unsocial-test')
+db.connect(process.env.MONGO_URL_TEST)
     .then(() => {
         try {
             return createPost('67339fbf156dde083adf67dd', 'https://www.litespeedtech.com/support/wiki/lib/exe/fetch.php/litespeed_wiki:config:403.png?w=400&tok=7a06aa', '403') // id, imagen, postcomment

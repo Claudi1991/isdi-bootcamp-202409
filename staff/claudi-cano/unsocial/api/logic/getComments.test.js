@@ -1,7 +1,8 @@
+import 'dotenv/config'
 import db from 'dat'
 import getComments from './getComments.js'
 
-db.connect('mongodb://localhost/unsocial-test')
+db.connect(process.env.MONO_URL_TEST)
     .then(() => {
         try {
             return getComments('67339fbf156dde083adf67dd', '6733a03b0df6f8c5b80cdd33') // nuevos id de mongo
