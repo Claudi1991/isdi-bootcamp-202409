@@ -25,6 +25,12 @@ const user = new Schema({
         type: String,
         required: true,
         minLength: 8
+    },
+    role: {
+        type: String,
+        required: true,
+        enum: ['regular', 'moderator'],
+        default: 'regular'
     }
 }, { versionKey: false })
 
@@ -41,7 +47,8 @@ const comment = new Schema({
     },
     date: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.now
     }
 })
 
@@ -62,7 +69,8 @@ const post = new Schema({
     },
     date: {
         type: String,
-        required: true
+        required: true,
+        default: Date.now
     },
     likes: [{
         type: ObjectId,
@@ -80,5 +88,3 @@ const models = {
     Post,
     Comment
 }
-
-export default models

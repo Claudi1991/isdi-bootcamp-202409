@@ -1,1 +1,1 @@
-export default () => sessionStorage.userId !== undefined
+export default () => localStorage.token !== undefined

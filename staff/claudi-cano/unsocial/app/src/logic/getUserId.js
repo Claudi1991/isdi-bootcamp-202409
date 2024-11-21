@@ -1,1 +1,1 @@
-export default () => sessionStorage.userId
+export default () => localStorage.token

@@ -1,9 +1,13 @@
+import { useState } from 'react'
+
 import { Button } from '../library'
 import Comments from './Comments'
+
 import logic from '../../logic'
-import getElapsedTime from '../../utils/getElapsedTime'
+
+import { getElapsedTime } from '../../util'
+
 import './Post.css'
-import { useState } from 'react'
 
 export default function Post({ post, onLiked, onDeleted, onCommentAdded, onCommentRemoved }) {
     const [view, setView] = useState(null)
@@ -79,6 +83,9 @@ export default function Post({ post, onLiked, onDeleted, onCommentAdded, onComme
         {author.id === logic.getUserId() && <Button onClick={handleDeleteClick}>🗑️</Button>}
 
         <Button onClick={handleCommentsClick}>💬 {comments} comments</Button>
+
+        {/* {logic.getUserRole() === 'moderator' && <Button>💀</Button>} */}
+        {logic.isUserRoleModerator() && <Button>💀</Button>}
 
         {view === 'comments' && <Comments
             postId={id}
